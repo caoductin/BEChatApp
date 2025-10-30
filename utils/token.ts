@@ -8,7 +8,7 @@ export const genarateToken = (user: UserProps) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            avater: user.avatar
+            avatar: user.avatar
         }
     }
     return jwt.sign(payload, process.env.JWT_SECRET as string, {
