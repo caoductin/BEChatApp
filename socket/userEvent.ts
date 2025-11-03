@@ -55,4 +55,41 @@ export function registerUserEvents(io: SocketIOServer, socket: Socket) {
       }
     }
   );
+
+  socket.on("getContacts", async () => {
+    try {
+      const currentUserId = socket.data.userId;
+      if (!currentUserId) {
+        socket.emit("getContacts", {
+          success: false,
+          msg: "Unauthorized",
+        });
+        return;
+      }
+
+      const users = await User.find(
+        { _id: { $ne: currentUserId } },
+        { password: 0 } // exlude password field
+      ).lean();
+
+      const contacts = users.map((user) => ({
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar || "",
+      }));
+
+      socket.emit("getContacts", {
+        success: true,
+        data: contacts,
+      });
+      
+    } catch (error: any) {
+      console.log("getContacts error: ", error);
+      socket.emit("getContacts", {
+        success: false,
+        msg: "Failed to fetch contacts",
+      });
+    }
+  });
 }
