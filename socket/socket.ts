@@ -3,6 +3,7 @@ import { Server as SocketIOServer, Socket, DefaultEventsMap } from "socket.io";
 import jwt from "jsonwebtoken";
 import { registerUserEvents } from "./userEvent";
 import Conversation from "../models/Conversation";
+import { registerChatEvents } from "./chatEvent";
 
 dotenv.config();
 
@@ -43,7 +44,7 @@ export function initializeSocket(server: any): SocketIOServer {
 
     // register events
     registerUserEvents(io, socket);
-    registerChatEvent(io, socket);
+    registerChatEvents(io, socket);
 
     // join all the conversations the user is part of
     try {
@@ -65,7 +66,5 @@ export function initializeSocket(server: any): SocketIOServer {
   });
   return io;
 }
-function registerChatEvent(io: SocketIOServer<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) {
-  throw new Error("Function not implemented.");
-}
+
 
